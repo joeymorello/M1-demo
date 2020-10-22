@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+        <title>Alpha Video Demo</title>
+        <link rel="stylesheet" href="style.css">
+		<style>
+			body { margin: 0; background-color: pink;}
+			canvas { 
+                display: block;
+                width: 100vw;
+                height: 100vh;
+            }
+		</style>
+	</head>
+	<body>
+        <video id="video" muted="muted" autoplay loop webkit-playsinline style="display:none">
+            <source src="assets/alphatest2.webm" type="video/mp4">
+        </video>
+
+        <div classname="button-wrapper">
+            <button onclick="changeColor()">Background Color</button>
+        </div>
+
+        <script src="js/three.js"></script>
+        <script src="js/OrbitControls.js"></script>
+
+		<script>
+            const colorArray = ['yellow', 'red', 'blue'];
+            function changeColor() { 
+                let color = colorArray[Math.floor(Math.random() * colorArray.length)];
+                document.body.style.background = color; 
+            } 
+
+			var scene = new THREE.Scene();
+			var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+            var renderer = new THREE.WebGLRenderer( { alpha: true } );
+            renderer.setClearColor(0x000000, 0 );
+			renderer.setSize( window.innerWidth, window.innerHeight );
+            document.body.appendChild( renderer.domElement );
+
+            // Video Plane
+            var video = document.getElementById( 'video' );
+
+            var texture = new THREE.VideoTexture( video );
+            texture.minFilter = THREE.LinearFilter;
+            texture.magFilter = THREE.LinearFilter;
+            texture.format = THREE.RGBAFormat;
+            texture.crossOrigin = 'anonymous';
+
+            video.load();
+            video.play();
+
+            var videoObject = new THREE.Mesh(
+            new THREE.PlaneGeometry(100, 100),
+            new THREE.MeshBasicMaterial({ 
+                map: texture, 
+                alphaTest: 0.5,
+                transparent: true,
+            }),);
+
+
+            scene.add( videoObject );
+
+            var controls = new THREE.OrbitControls( camera, renderer.domElement );
+
+			//controls.update() must be called after any manual changes to the camera's transform
+            camera.position.set( 0, 20, 100 );
+            controls.update();
+
+			var animate = function () {
+                requestAnimationFrame( animate );
+                controls.update();
+				renderer.render( scene, camera );
+			};
+
+			animate();
+		</script>
+	</body>
+</html>

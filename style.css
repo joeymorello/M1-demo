@@ -1,0 +1,21 @@
+#alpha-video {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  z-index: 15;
+}
+
+.button-wrapper {
+  height: 200px;
+  position: relative;
+}
+
+button {
+  padding: 10px;
+  margin: 0;
+  position: absolute;
+  bottom: 25px;
+  left: 50%;
+  -ms-transform: translateX(-50%);
+  transform: translateX(-50%);
+}
