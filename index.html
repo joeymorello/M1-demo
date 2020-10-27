@@ -19,12 +19,18 @@
 		</style>
 	</head>
 	<body>
-        <video id="video" muted="muted" autoplay loop webkit-playsinline style="display:none">
+        <!-- muted="muted" loop -->
+        <video id="video" autoplay webkit-playsinline style="display:none">
             <source src="assets/video.webm" type="video/mp4">
         </video>
 
-        <div classname="button-wrapper">
+        <!-- <div classname="button-wrapper">
             <button onclick="changeColor()">Background Color</button>
+        </div> -->
+        
+        <div id="button-wrapper">
+            <h1>Welcome.</h1>
+            <button onclick="togglePlay()">Enter</button>
         </div>
 
         <script src="js/three.js"></script>
@@ -55,7 +61,21 @@
             texture.crossOrigin = 'anonymous';
 
             video.load();
-            video.play();
+            // video.play();
+
+            // https://developers.google.com/web/updates/2017/06/play-request-was-interrupted
+            function togglePlay() {
+                const playPromise = video.play();
+                if (playPromise !== null){
+                    playPromise.catch(() => { 
+                        video.play(); 
+                    })
+                }
+                document.getElementById("button-wrapper").style.width = "0%";
+                document.getElementById("button-wrapper").style.opacity = "0";
+            }
+           
+            
 
             var videoObject = new THREE.Mesh(
             new THREE.PlaneGeometry(150, 100),
